@@ -1,0 +1,63 @@
+<!--
+python -m http.server 8000    http://localhost:8000
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Menú RA Interactivo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+    <style>
+      #menu {
+        position: absolute;
+        top: 10px; right: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 10px;
+        font-family: Arial;
+        z-index: 10;
+      }
+      .menu-item {
+        cursor: pointer;
+        margin: 5px 0;
+        color: #333;
+      }
+      .menu-item:hover {
+        color: #007bff;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="menu">
+      <h2>ENTRADAS</h2>
+      <div class="menu-item" data-model="models/hamburguesa.glb">Hamburguesa</div>
+      <div class="menu-item" data-model="models/papas.glb">Platillo demo 2</div>
+      <div class="menu-item" data-model="models/pizza.glb">Platillo demo 3</div>
+    </div>
+
+    <a-scene embedded arjs="sourceType: webcam;">
+      <a-marker preset="hiro">
+        <a-entity id="model-container" position="0 0 0" scale="0.5 0.5 0.5"></a-entity>
+      </a-marker>
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <script>
+      const menuItems = document.querySelectorAll('.menu-item');
+      const container = document.getElementById('model-container');
+
+      menuItems.forEach(item => {
+        item.addEventListener('click', () => {
+          container.innerHTML = ''; // limpia modelo anterior
+          const modelSrc = item.getAttribute('data-model');
+          const model = document.createElement('a-entity');
+          model.setAttribute('gltf-model', modelSrc);
+          model.setAttribute('rotation', '0 180 0');
+          container.appendChild(model);
+        });
+      });
+    </script>
+  </body>
+</html>
